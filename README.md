@@ -1,1 +1,1 @@
-# custom-switch
+# Custom Switch
