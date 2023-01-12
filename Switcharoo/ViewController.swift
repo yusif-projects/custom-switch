@@ -53,6 +53,14 @@ class Switcharoo: UIView {
         
         let tapGR = UITapGestureRecognizer(target: self, action: #selector(tapHandler))
         backgroundView.addGestureRecognizer(tapGR)
+        
+        let swipeLeftGR = UISwipeGestureRecognizer(target: self, action: #selector(swipeHandler))
+        swipeLeftGR.direction = .left
+        circleView.addGestureRecognizer(swipeLeftGR)
+        
+        let swipeRightGR = UISwipeGestureRecognizer(target: self, action: #selector(swipeHandler))
+        swipeRightGR.direction = .right
+        circleView.addGestureRecognizer(swipeRightGR)
     }
     
     private func createBackground() {
@@ -128,7 +136,7 @@ class Switcharoo: UIView {
     
     private func setupScale() {
         if isOn {
-            shadowHeight.constant = self.frame.size.width + height * 2
+            shadowHeight.constant = self.frame.size.width * 2
         } else {
             shadowHeight.constant = height - 1
         }
@@ -141,6 +149,22 @@ class Switcharoo: UIView {
             isOn = false
         }
         
+        animateTransiton()
+    }
+    
+    @objc private func swipeHandler(_ swipe: UISwipeGestureRecognizer) {
+        let direction = swipe.direction
+        
+        if isOn && direction == .left {
+            isOn.toggle()
+            animateTransiton()
+        } else if !isOn && direction == .right {
+            isOn.toggle()
+            animateTransiton()
+        }
+    }
+    
+    private func animateTransiton() {
         setupDistance()
         setupScale()
         
@@ -148,7 +172,12 @@ class Switcharoo: UIView {
             self.fillView.layer.cornerRadius = self.shadowHeight.constant / 2
             self.layoutIfNeeded()
         }
-
+    }
+    
+    private func toggle() {
+        isOn.toggle()
+        
+        animateTransiton()
     }
     
 }
